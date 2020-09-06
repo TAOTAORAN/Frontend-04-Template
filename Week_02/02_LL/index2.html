@@ -1,0 +1,42 @@
+<script>
+    /* 使用LL算法构建AST | LL词法分析 */
+    
+    const regexp = /([0-9\.]+)|([ \t]+)|([\r\n]+)|(\*)|(\/)|(\+)|(\-)/g;
+    
+    let directory = ["Number", "WhiteSpace", "LineTerminator", "*", "/", "+", "-"];
+
+    function* tokenize (source) {
+        let result = null;
+        let lastIndex = 0;
+        while (true) {
+            result = regexp.exec(source);
+            lastIndex = regexp.lastIndex;
+            if (!result) {
+                break;
+            }
+            // 排除不认识的字符和格式
+            if (regexp.lastIndex - lastIndex > result[0].length) {
+                break;
+            }
+            let token = {
+                type: null,
+                value: null,
+            }
+            for (let i = 1; i <= directory.length; i++) {
+                if (result[i]) {
+                    token.type = directory[i - 1];
+                }
+            }
+            token.value = result[0];
+            yield token;
+        }
+        yield {
+            type: "EOF"
+        }
+    }
+    
+    for (let token of tokenize("3 + 10 * 25")) {
+        console.log(token);
+    }
+    
+    </script>

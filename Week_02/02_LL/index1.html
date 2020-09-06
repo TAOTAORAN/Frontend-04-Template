@@ -1,0 +1,26 @@
+<script>
+/* 使用LL算法构建AST | 正则表达式 */
+
+// 正则中使用g 影响regexp的lastIndex属性 由此每次循环exec()方法得到的result不同
+const regexp = /([0-9\.]+)|([ \t]+)|([\r\n]+)|(\*)|(\/)|(\+)|(\-)/g;
+
+let directory = ["Number", "WhiteSpace", "LineTerminator", "*", "/", "+", "-"];
+
+function tokenize (source) {
+    let result = null;
+    while (true) {
+        result = regexp.exec(source);
+        if (!result) {
+            break;
+        }
+        for (let i = 1; i <= directory.length; i++) {
+            if (result[i]) {
+                console.log(directory[i - 1]);
+            }
+        }
+        console.log(result);
+    }
+}
+
+tokenize("3 + 10 * 25");
+</script>

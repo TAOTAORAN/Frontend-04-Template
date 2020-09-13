@@ -1,0 +1,50 @@
+<script>
+    /* proxy与双向绑定|模仿reactive实现原理-建立effect与reactive的连接 优化侦听：只有对应变量变化触发函数调用 */
+    let callbacks = new Map();
+    let usedReactivities = [];
+    let object = {
+        a: 1,
+        b: 2
+    }
+
+    let po = reactive(object);
+
+    effect (() => {
+        console.log(po.a);
+    });
+
+    function effect (callback) {
+        usedReactivities = [];
+        callback();
+
+        for (let reactivity of usedReactivities) {
+            if (!callbacks.has(reactivity[0])) {
+                callbacks.set(reactivity[0], new Map());
+            }
+            if (!callbacks.get(reactivity[0]).has(reactivity[1])) {
+                callbacks.get(reactivity[0]).set(reactivity[1], []);
+            }
+            callbacks.get(reactivity[0]).get(reactivity[1]).push(callback);
+        }
+    }
+
+    function reactive () {
+        return new Proxy(object, {
+            set (obj, prop, val) {
+                obj[prop] = val;
+                if (callbacks.get(obj)) {
+                    if (callbacks.get(obj).get(prop)) {
+                        for (callback of callbacks.get(obj).get(prop)) {
+                            callback();
+                        }
+                    }
+                }
+                return true;
+            },
+            get (obj, prop, val) {
+                usedReactivities.push([obj, prop]);
+                return obj[prop];
+            }
+        })
+    }
+</script>

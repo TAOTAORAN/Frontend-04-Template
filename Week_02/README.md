@@ -3,7 +3,7 @@
 * [寻路|实现地图编辑器](https://github.com/TAOTAORAN/Frontend-04-Template/blob/master/Week_02/01_map/index1.html)  
   - 实现：绘制100 * 100 的地图，地图上左键绘制障碍，右键清除障碍，有保存功能。
 * [寻路|广度优先搜索](https://github.com/TAOTAORAN/Frontend-04-Template/blob/master/Week_02/01_map/index2.html)  
-  - 实现：给出指定起点到终点可以走的路径集合。  
+  - 实现：给出指定起点到终点可以走的点的集合。  
   - 思路：  
         1.本质上是解决从起点到终点可以怎么走的问题。  
         2.缩小问题范围，先思考，第一步能怎么走，第二步、第三步...  

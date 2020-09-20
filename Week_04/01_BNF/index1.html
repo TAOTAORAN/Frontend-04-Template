@@ -1,0 +1,32 @@
+<!-- BNF定义乘法 -->
+<MultiplicativeExpression>::=<Number>|
+    <MultiplicativeExpression>"*"<Number>|
+    <MultiplicativeExpression>"/"<Number>|
+<!-- BNF定义加法 -->
+<AdditiveExpression>::=<MultiplicativeExpression>|
+    <AdditiveExpression>"+"<MultiplicativeExpression>|
+    <AdditiveExpression>"-"<MultiplicativeExpression>|
+        
+<!-- 算术优先级低的表达式，应该是基于算术优先级高的去写产生式。 -->
+<!-- 假如有一个式子是 ( 2 + 3 ) * 4 * ( 5 * 6), 看看能不能套到你的产生式里 -->
+<!-- BNF定义允许带括号的乘法 -->
+<MultiplicativeExpression>::=<Number>|
+    <MultiplicativeExpression>"*"<Number>|
+    <MultiplicativeExpression>"/"<Number>|
+<!-- BNF定义允许带括号的加法 -->
+<AdditiveExpression>::=<MultiplicativeExpression>|
+    <AdditiveExpression>"+"<MultiplicativeExpression>|
+    "("<AdditiveExpression>")""+"<MultiplicativeExpression>|
+    <AdditiveExpression>"-"<MultiplicativeExpression>|
+    "("<AdditiveExpression>")""-"<MultiplicativeExpression>|
+
+<!-- 修改后 -->
+<BracketExpression>::=<Number>|"("<AdditiveExpression>")"|
+<MultiplicativeExpression>::=<BracketExpression>|
+    <MultiplicativeExpression>"*"<BracketExpression>|
+    <MultiplicativeExpression>"/"<BracketExpression>|
+<AdditiveExpression>::=<MultiplicativeExpression>|
+    <AdditiveExpression>"+"<MultiplicativeExpression>|
+    <AdditiveExpression>"-"<MultiplicativeExpression>|
+    
+

@@ -1,0 +1,88 @@
+<script>
+    // 暂未考虑小数
+    const reg = {
+        '2': /^0b([0-1])+$/,
+        '8': /^0o([0-7])+$/,
+        '10': /^(-?\d+)(\.\d+)?$/,
+        '16': /^0x([\da-f]+$)/,
+    }
+    const template = {
+        '10': 'a',
+        '11': 'b',
+        '12': 'c',
+        '13': 'd',
+        '14': 'e',
+        '15': 'f',
+    }
+    function validation (str, type) {
+        return reg[type].test(str);
+    }
+    /**
+    * 字符串转换数字
+    * @param {String} str 字符串
+    * @param {Number} type 转换进制
+    */
+    function stringToNumber (str, type) {
+        if (!validation(str, type)) {
+            console.log("can't transform");
+            return;
+        }
+        str = str.slice(2);
+        let result = 0;
+        for (let i = str.length - 1; i >= 0; i--) {
+            if (type === 16 && str[i].charCodeAt(0) >= 97) {
+                let tempNum = 0;
+                if (str[i] === 'a') {
+                    tempNum = 10;
+                }
+                if (str[i] === 'b') {
+                    tempNum = 11;
+                }
+                if (str[i] === 'c') {
+                    tempNum = 12;
+                }
+                if (str[i] === 'd') {
+                    tempNum = 13;
+                }
+                if (str[i] === 'e') {
+                    tempNum = 14;
+                }
+                if (str[i] === 'f') {
+                    tempNum = 15;
+                }
+                result += tempNum * type ** (str.length - 1 - i);
+            } else {
+                result += str[i] * type ** (str.length - 1 - i);
+            }
+        }
+        return Number(result);
+    }
+    /**
+    * 数字转换为相应进制的字符串
+    * @param {Number} num  
+    * @param {Number} type 转换进制
+    */
+    function numberToString (num, type) {
+        if (type > 16 || type < 1) {
+            console.log("can't transform");
+            return;
+        }
+        let result = [];
+        while (num / type >= 1) {
+            if (type === 16 && (num % type) > 10) {
+                result.unshift(template[num % type]);
+            } else {
+                result.unshift(num % type);
+            }
+            num = ~~(num / type);
+        }
+        if (num < type && num > 0) {
+            if (type === 16 && (num % type) > 10) {
+                result.unshift(template[num % type]);
+            } else {
+                result.unshift(num % type);
+            }
+        }
+        return result.join('');
+    }
+</script>

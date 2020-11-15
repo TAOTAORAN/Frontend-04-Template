@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="a">
+        <span>1</span>
+        <p>2</p>
+        <div>3</div>
+        <a>4</a>
+    </div>
+    <!-- <div id="b">123<span>456</span>7890</div> -->
+</body>
+<script>
+// 使id为a的DOM树反转顺序
+
+let a = document.querySelector("#a");
+function reverse (element) {
+    const l = element.childNodes.length;
+    while (l-- > 0) {
+        // node如果存在于某一棵树上，插入前不需要remove掉
+        // 发生3次重排
+        element.appendChild(a.childNodes[l]);
+    }
+}
+reverse(a);
+
+// 练习Range
+// let b = document.querySelector("#b");
+// let range = new Range();
+// range.setStart(a.childNodes[0], 3);
+// range.setStart(a.childNodes[2], 3);
+// range.extractContents();
+
+// 使用range实现reverse
+
+function reverseChildren (ele) {
+    let range = new Range();
+    range.selectNodeContents();
+    let fragment = range.extractContents();
+    let l = fragment.childNodes.length;
+    // 使用fragment减少重排次数为2
+    while(l-- > 0) {
+        fragment.appendChild(fragment.childNodes[l]);
+    }
+    ele.appendChild(fragment);
+}
+reverseChildren(a);
+</script>
+</html>

@@ -1,6 +1,6 @@
 // https://www.w3.org/TR/
 // https://www.cnblogs.com/wphl-27/p/10336591.html
-
+// 转换为普通数组
 const standards = Array.prototype.slice.call(document.querySelector("#container").children).filter(e => e.getAttribute("data-tag").match(/css/)).map(e => ({
         name: e.children[1].innerText,
         url: e.children[1].children[0].href,

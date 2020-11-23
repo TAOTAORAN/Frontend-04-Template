@@ -33,8 +33,8 @@ class Carousel extends Component {
                     let pos = current + offset;
                     // 循环取数小技巧
                     pos = (pos + children.length) % children.length;
-                    child[pos].style.transition = "none";
-                    child[pos].style.transform = `translateX(${-pos * 500 + offset * 500 + x % 500}px)`;
+                    children[pos].style.transition = "none";
+                    children[pos].style.transform = `translateX(${-pos * 500 + offset * 500 + x % 500}px)`;
                 }
                 console.log("move");
                 // for (let child of children) {
@@ -47,10 +47,10 @@ class Carousel extends Component {
                 let x = e.clientX - startX;
                 position = position - Math.round(x / 500);
                 for (let offset of [0, -Math.sign(Math.round(x / 500) - x + 250 * Math.sign(x))]) {
-                    let pos = current + offset;
+                    let pos = position + offset;
                     pos = (pos + children.length) % children.length;
-                    child[pos].style.transition = "none";
-                    child[pos].style.transform = `translateX(${-pos * 500 + offset * 500}px)`;
+                    children[pos].style.transition = "";
+                    children[pos].style.transform = `translateX(${-pos * 500 + offset * 500}px)`;
                 }
                 // this.root.removeEventListener("mousemove", move);
                 // this.root.removeEventListener("mouseup", up);

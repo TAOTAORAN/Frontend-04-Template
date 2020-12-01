@@ -1,6 +1,6 @@
 // 一个node.js模块
 module.exports = {
-    entry: "./main.js",
+    entry: "./animation-demo.js",
     module: {
         rules: [
             {

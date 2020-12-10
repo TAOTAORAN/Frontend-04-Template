@@ -1,25 +1,26 @@
 /**
- * 1.全局变量的优化
- * 考虑到手势可能有多个手指
- * 鼠标有左右键等等的区分(浏览器模型里 至少支持五个键的down&up)
- * 表示状态的变量用全局的显然不合适
- * 2.
+ * 新增事件派发
  */
 let element = document.documentElement;
+let isListeningMouse = false;
 
 element.addEventListener("mousedown", e => {
-    // 养成这也创建object的习惯 避免object的原始属性添乱
     let context = Object.create(null);
     contexts.set("mouse" + (1 << e.button), context);
     start(e, context);
 
     let mousemove = e => {
         let button = 1;
-        // 由于e.buttons得到掩码的形式的按键码
-        // 因此以移位操作遍历掩码 由此得到按下哪些按键
         while (button <= e.buttons) {
             if (button & e.buttons) {
-                let context = contexts.get("mouse" + button);
+                let key;
+                if (button === 2)
+                    key = 4;
+                else if (button === 4)
+                    key = 2;
+                else 
+                    key = button;
+                let context = contexts.get("mouse" + key);
                 move(e, context);
             } 
             button = button << 1;
@@ -32,11 +33,17 @@ element.addEventListener("mousedown", e => {
         end(e, context);
         contexts.delete("mouse" + (1 << e.button));
         move(e);
-        element.removeEventListener("mousemove", mousemove);
-        element.removeEventListener("mouseup", mouseup);
+        if (e.buttons === 0) {
+            document.removeEventListener("mousemove", mousemove);
+            document.removeEventListener("mouseup", mouseup);
+            isListeningMouse = false;
+        }
     }
-    element.addEventListener("mousemove", mousemove);
-    element.addEventListener("mouseup", mouseup);
+    if (!isListeningMouse) {
+        document.addEventListener("mousemove", mousemove);
+        document.addEventListener("mouseup", mouseup);
+        isListeningMouse = true;
+    }
 });
 
 let contexts = new Map();
@@ -69,11 +76,6 @@ element.addEventListener("touchcancel", e => {
     }
 });
 
-// 被优化的全局变量
-// let handler;
-// let startX, startY;
-// let isPan, isTap = true, isPress = false;
-
 let start = (point, context) => {
     context.startX = point.clientX, startY = point.clientY;
     context.isPan = false;
@@ -103,6 +105,7 @@ let move = (point, context) => {
 let end = (point, context) => {
     if (context.isTap) {
         console.log("tap end");
+        dispatch("tap", {});
         clearTimeout(context.handler);
     }
     if (context.isPan) {
@@ -116,4 +119,14 @@ let end = (point, context) => {
 let cancel = (point, context) => {
     clearTimeout(context.handler);
     console.log("cancel");
+}
+// 事件派发
+function dispatch (type, properties) {
+    // or new CustomEvent
+    let event = new Event(type);
+    for (let name of properties) {
+        event[name] = properties[name];
+    }
+    event.dispatchEvent(event);
+    console.log(event);
 }

@@ -12,5 +12,4 @@
   4. 安装npm：sudo apt install npm
   5. 启动服务器：service ssh start(默认22端口)
   - 服务器框架Express：基于 Node.js的JavaScript的服务器端开发框架
-  - Nodejs中的流式传输：
-  1. 可读的流
+  - Nodejs中的流式传输
